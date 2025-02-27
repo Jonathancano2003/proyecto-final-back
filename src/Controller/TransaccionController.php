@@ -37,4 +37,22 @@ class TransaccionController extends AbstractController
 
         return $this->json(['message' => 'Transaction created successfully'], Response::HTTP_CREATED);
     }
+    #[Route('/transacciones', name: 'get_all_transacciones', methods: ['GET'])]
+    public function getAll(EntityManagerInterface $entityManager): JsonResponse
+    {
+        $transaccionRepository = $entityManager->getRepository(Transaccion::class);
+        $transacciones = $transaccionRepository->findAll();
+
+        $transaccionesArray = array_map(function ($transaccion) {
+            return [
+                'id' => $transaccion->getId(),
+                'anuncio' => $transaccion->getAnuncio(),
+                'comprador' => $transaccion->getComprador(),
+                'vendedor' => $transaccion->getVendedor(),
+                'fecha_venta' => $transaccion->getFechaVenta()->format('Y-m-d H:i:s'),
+            ];
+        }, $transacciones);
+
+        return $this->json($transaccionesArray, Response::HTTP_OK);
+    }
 }
