@@ -4,39 +4,19 @@ namespace App\Controller;
 
 use App\Entity\Favorito;
 use App\Repository\FavoritoRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/favorites')]
+#[Route('/api/favoritos')]
 class FavoritoController extends AbstractController
 {
-    private $entityManager;
-    private $favoritoRepository;
+    private FavoritoRepository $favoritoRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, FavoritoRepository $favoritoRepository)
+    public function __construct(FavoritoRepository $favoritoRepository)
     {
-        $this->entityManager = $entityManager;
         $this->favoritoRepository = $favoritoRepository;
-    }
-
-    #[Route('', methods: ['GET'])]
-    public function listarFavoritos(): JsonResponse
-    {
-        $favoritos = $this->favoritoRepository->findAll();
-        return $this->json($favoritos);
-    }
-
-    #[Route('/{id}', methods: ['GET'])]
-    public function obtenerFavorito(int $id): JsonResponse
-    {
-        $favorito = $this->favoritoRepository->find($id);
-        if (!$favorito) {
-            return $this->json(['error' => 'Favorito no encontrado'], 404);
-        }
-        return $this->json($favorito);
     }
 
     #[Route('', methods: ['POST'])]
@@ -44,29 +24,50 @@ class FavoritoController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        if (!isset($data['usuario_id'], $data['anuncio_id'])) {
+        if (!isset($data['usuario'], $data['coche'])) {
             return $this->json(['error' => 'Datos incompletos'], 400);
         }
 
         $favorito = new Favorito();
-        $favorito->setUsuarioId($data['usuario_id']);
-        $favorito->setAnuncioId($data['anuncio_id']);
+        $favorito->setUsuario($data['usuario']);
+        $favorito->setCoche($data['coche']);
+        $favorito->setFechaGuardado(new \DateTime());
 
         $this->favoritoRepository->agregarFavorito($favorito);
 
-        return $this->json($favorito, 201);
+        return $this->json(['mensaje' => 'Favorito agregado'], 201);
+    }
+
+    #[Route('', methods: ['GET'])]
+    public function listarFavoritos(): JsonResponse
+    {
+        $favoritos = $this->favoritoRepository->listarFavoritos();
+        return $this->json($favoritos);
+    }
+
+    #[Route('/{id}', methods: ['GET'])]
+    public function obtenerFavorito(int $id): JsonResponse
+    {
+        $favorito = $this->favoritoRepository->obtenerFavorito($id);
+
+        if (!$favorito) {
+            return $this->json(['error' => 'Favorito no encontrado'], 404);
+        }
+
+        return $this->json($favorito);
     }
 
     #[Route('/{id}', methods: ['DELETE'])]
     public function eliminarFavorito(int $id): JsonResponse
     {
-        $favorito = $this->favoritoRepository->find($id);
+        $favorito = $this->favoritoRepository->obtenerFavorito($id);
+
         if (!$favorito) {
             return $this->json(['error' => 'Favorito no encontrado'], 404);
         }
 
         $this->favoritoRepository->eliminarFavorito($favorito);
 
-        return $this->json(['message' => 'Favorito eliminado']);
+        return $this->json(['mensaje' => 'Favorito eliminado']);
     }
 }

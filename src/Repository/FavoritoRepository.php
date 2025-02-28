@@ -19,6 +19,16 @@ class FavoritoRepository extends ServiceEntityRepository
         $this->_em->flush();
     }
 
+    public function obtenerFavorito(int $id): ?Favorito
+    {
+        return $this->find($id);
+    }
+
+    public function listarFavoritos(): array
+    {
+        return $this->findAll();
+    }
+
     public function eliminarFavorito(Favorito $favorito): void
     {
         $this->_em->remove($favorito);
