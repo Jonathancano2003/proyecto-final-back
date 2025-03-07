@@ -55,4 +55,46 @@ class TransaccionController extends AbstractController
 
         return $this->json($transaccionesArray, Response::HTTP_OK);
     }
+    #[Route('/transaccion/{id}', name: 'app_transaccion_delete', methods: ['DELETE'])]
+    public function delete(int $id, EntityManagerInterface $entityManager): JsonResponse
+    {
+    $transaccion = $entityManager->getRepository(Transaccion::class)->find($id);
+
+    if (!$transaccion) {
+        return $this->json(['error' => 'Transaction not found'], Response::HTTP_NOT_FOUND);
+    }
+
+    $entityManager->remove($transaccion);
+    $entityManager->flush();
+
+    return $this->json(['message' => 'Transaction removed successfully'], Response::HTTP_OK);
+    }
+    #[Route('/update', name: 'app_transaccion_update', methods: ['PUT'])]
+    public function update(Request $request, EntityManagerInterface $entityManager, TransaccionRepository $transaccionRepository): JsonResponse
+    {
+    $id = $request->query->get('id');
+    $anuncio = $request->query->get('anuncio');
+    $comprador = $request->query->get('comprador');
+    $vendedor = $request->query->get('vendedor');
+    $fechaVenta = $request->query->get('fecha_venta');
+
+    if (is_null($id) || is_null($anuncio) || is_null($comprador) || is_null($vendedor) || is_null($fechaVenta)) {
+        return $this->json(['message' => 'Missing parameters'], Response::HTTP_BAD_REQUEST);
+    }
+
+    $transaccion = $transaccionRepository->findOneBy(['id' => $id]);
+
+    if ($transaccion) {
+        $transaccion->setAnuncio($anuncio);
+        $transaccion->setComprador($comprador);
+        $transaccion->setVendedor($vendedor);
+        $transaccion->setFechaVenta(new \DateTime($fechaVenta));
+
+        $entityManager->flush();
+
+        return $this->json(['message' => 'Transaction updated successfully'], Response::HTTP_OK);
+    } else {
+        return $this->json(['message' => 'Transaction not found'], Response::HTTP_NOT_FOUND);
+    }
+}
 }
