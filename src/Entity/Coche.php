@@ -25,6 +25,12 @@ class Coche
     #[ORM\Column]
     private ?int $kilometraje = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imagen = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $descripcion = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,6 +80,30 @@ class Coche
     public function setKilometraje(int $kilometraje): static
     {
         $this->kilometraje = $kilometraje;
+
+        return $this;
+    }
+
+    public function getImagen(): ?string
+    {
+        return $this->imagen;
+    }
+
+    public function setImagen(?string $imagen): static
+    {
+        $this->imagen = $imagen;
+
+        return $this;
+    }
+
+    public function getDescripcion(): ?string
+    {
+        return $this->descripcion;
+    }
+
+    public function setDescripcion(?string $descripcion): static
+    {
+        $this->descripcion = $descripcion;
 
         return $this;
     }
