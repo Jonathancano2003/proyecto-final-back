@@ -2,17 +2,36 @@
 
 namespace App\Controller;
 
+use App\Entity\Anuncio;
+use App\Repository\AnuncioRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
-final class AnuncioController extends AbstractController
+#[Route('/api/anuncios')]
+class AnuncioController extends AbstractController
 {
-    #[Route('/anuncio', name: 'app_anuncio')]
-    public function index(): Response
+    private AnuncioRepository $anuncioRepository;
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(AnuncioRepository $anuncioRepository, EntityManagerInterface $entityManager)
     {
-        return $this->render('anuncio/index.html.twig', [
-            'controller_name' => 'AnuncioController',
-        ]);
+        $this->anuncioRepository = $anuncioRepository;
+        $this->entityManager = $entityManager;
+    }
+
+    #[Route('', methods: ['GET'])]
+    public function listarAnuncios(): JsonResponse
+    {
+        return $this->json($this->anuncioRepository->findAll());
+    }
+
+    #[Route('/{id}', methods: ['GET'])]
+    public function obtenerAnuncio(int $id): JsonResponse
+    {
+        $anuncio = $this->anuncioRepository->find($id);
+        return $anuncio ? $this->json($anuncio) : $this->json(['error' => 'Anuncio no encontrado'], 404);
     }
 }
