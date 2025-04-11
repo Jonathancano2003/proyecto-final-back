@@ -97,4 +97,19 @@ class UsuarioController extends AbstractController
 
         return $this->json(['message' => 'Usuario eliminado correctamente']);
     }
+
+    #[Route('/login', methods: ['POST'])]
+    public function login(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+    
+        $usuario = $this->usuarioRepository->findOneBy(['email' => $data['email']]);
+    
+        if (!$usuario || !password_verify($data['contraseña'], $usuario->getContraseña())) {
+            return $this->json(['error' => 'Credenciales inválidas'], 401);
+        }
+    
+        return $this->json($usuario); // 👈 devuelve el usuario completo
+    }
+    
 }
