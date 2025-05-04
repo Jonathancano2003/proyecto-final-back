@@ -13,8 +13,8 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/api/usuarios')]
 class UsuarioController extends AbstractController
 {
-    private $usuarioRepository;
-    private $entityManager;
+    private UsuarioRepository $usuarioRepository;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(UsuarioRepository $usuarioRepository, EntityManagerInterface $entityManager)
     {
@@ -53,7 +53,8 @@ class UsuarioController extends AbstractController
         $usuario->setEmail($data['email']);
         $usuario->setContraseña(password_hash($data['contraseña'], PASSWORD_DEFAULT));
 
-        $this->usuarioRepository->add($usuario);
+        $this->entityManager->persist($usuario);
+        $this->entityManager->flush();
 
         return $this->json(['message' => 'Usuario creado correctamente'], 201);
     }
@@ -91,8 +92,24 @@ class UsuarioController extends AbstractController
             return $this->json(['error' => 'Usuario no encontrado'], 404);
         }
 
-        $this->usuarioRepository->remove($usuario);
+        $this->entityManager->remove($usuario);
+        $this->entityManager->flush();
 
         return $this->json(['message' => 'Usuario eliminado correctamente']);
     }
+
+    #[Route('/login', methods: ['POST'])]
+    public function login(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+    
+        $usuario = $this->usuarioRepository->findOneBy(['email' => $data['email']]);
+    
+        if (!$usuario || !password_verify($data['contraseña'], $usuario->getContraseña())) {
+            return $this->json(['error' => 'Credenciales inválidas'], 401);
+        }
+    
+        return $this->json($usuario); // 👈 devuelve el usuario completo
+    }
+    
 }

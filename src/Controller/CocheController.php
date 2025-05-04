@@ -106,5 +106,6 @@ final class CocheController extends AbstractController
         $entityManager->flush();
 
         return $this->json(['message' => 'Coche eliminado con éxito'], Response::HTTP_OK);
+
     }
 }

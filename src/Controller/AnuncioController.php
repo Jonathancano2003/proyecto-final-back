@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Anuncio;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -109,5 +110,6 @@ final class AnuncioController extends AbstractController
         $entityManager->flush();
 
         return $this->json(['message' => 'Anuncio eliminado con éxito'], Response::HTTP_OK);
+
     }
 }

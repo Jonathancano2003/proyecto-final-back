@@ -20,7 +20,7 @@ class Coche
     private ?string $modelo = null;
 
     #[ORM\Column]
-    private ?int $año = null;
+    private ?int $year = null;
 
     #[ORM\Column]
     private ?int $kilometraje = null;
@@ -60,14 +60,14 @@ class Coche
         return $this;
     }
 
-    public function getAño(): ?int
+    public function getyear(): ?int
     {
-        return $this->año;
+        return $this->year;
     }
 
-    public function setAño(int $año): static
+    public function setyear(int $year): static
     {
-        $this->año = $año;
+        $this->year = $year;
 
         return $this;
     }
