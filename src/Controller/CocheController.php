@@ -21,7 +21,7 @@ final class CocheController extends AbstractController
         $coche = new Coche();
         $coche->setMarca($data['marca'] ?? '');
         $coche->setModelo($data['modelo'] ?? '');
-        $coche->setAño($data['año'] ?? 0);
+        $coche->setYear($data['año'] ?? 0);
         $coche->setKilometraje($data['kilometraje'] ?? 0);
         $coche->setImagen($data['imagen'] ?? null);
         $coche->setDescripcion($data['descripcion'] ?? null);
@@ -41,7 +41,7 @@ final class CocheController extends AbstractController
             'id' => $coche->getId(),
             'marca' => $coche->getMarca(),
             'modelo' => $coche->getModelo(),
-            'año' => $coche->getAño(),
+            'año' => $coche->getYear(),
             'kilometraje' => $coche->getKilometraje(),
             'imagen' => $coche->getImagen(),
             'descripcion' => $coche->getDescripcion(),
@@ -63,7 +63,7 @@ final class CocheController extends AbstractController
             'id' => $coche->getId(),
             'marca' => $coche->getMarca(),
             'modelo' => $coche->getModelo(),
-            'año' => $coche->getAño(),
+            'año' => $coche->getYear(),
             'kilometraje' => $coche->getKilometraje(),
             'imagen' => $coche->getImagen(),
             'descripcion' => $coche->getDescripcion(),
@@ -83,7 +83,7 @@ final class CocheController extends AbstractController
 
         if (isset($data['marca'])) $coche->setMarca($data['marca']);
         if (isset($data['modelo'])) $coche->setModelo($data['modelo']);
-        if (isset($data['año'])) $coche->setAño($data['año']);
+        if (isset($data['año'])) $coche->setYear($data['año']);
         if (isset($data['kilometraje'])) $coche->setKilometraje($data['kilometraje']);
         if (isset($data['imagen'])) $coche->setImagen($data['imagen']);
         if (isset($data['descripcion'])) $coche->setDescripcion($data['descripcion']);
