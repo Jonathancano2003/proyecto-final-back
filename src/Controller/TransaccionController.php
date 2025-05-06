@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Transaccion;
+use App\Repository\TransaccionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

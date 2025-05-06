@@ -36,19 +36,21 @@ final class CocheController extends AbstractController
     public function list(EntityManagerInterface $entityManager): JsonResponse
     {
         $coches = $entityManager->getRepository(Coche::class)->findAll();
-
+    
         $result = array_map(fn($coche) => [
             'id' => $coche->getId(),
-            'marca' => $coche->getMarca(),
-            'modelo' => $coche->getModelo(),
-            'año' => $coche->getYear(),
-            'kilometraje' => $coche->getKilometraje(),
-            'imagen' => $coche->getImagen(),
-            'descripcion' => $coche->getDescripcion(),
+            'brand' => $coche->getMarca(),
+            'model' => $coche->getModelo(),
+            'year' => $coche->getYear(),
+            'mileage' => $coche->getKilometraje(),
+            'image' => $coche->getImagen(),
+            'description' => $coche->getDescripcion(),
+            'price' => $coche->getPrecio(),
         ], $coches);
-
+    
         return $this->json($result, Response::HTTP_OK);
     }
+    
 
     #[Route('/get/{id}', name: 'get_coche', methods: ['GET'])]
     public function getOne(int $id, EntityManagerInterface $entityManager): JsonResponse

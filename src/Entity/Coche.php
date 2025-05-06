@@ -107,4 +107,18 @@ class Coche
 
         return $this;
     }
+    #[ORM\Column(type: 'float')]
+private float $precio;
+
+public function getPrecio(): float
+{
+    return $this->precio;
+}
+
+public function setPrecio(float $precio): self
+{
+    $this->precio = $precio;
+    return $this;
+}
+
 }
