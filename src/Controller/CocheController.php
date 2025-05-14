@@ -39,17 +39,18 @@ final class CocheController extends AbstractController
     
         $result = array_map(fn($coche) => [
             'id' => $coche->getId(),
-            'brand' => $coche->getMarca(),
-            'model' => $coche->getModelo(),
+            'marca' => $coche->getMarca(),
+            'modelo' => $coche->getModelo(),
             'year' => $coche->getYear(),
-            'mileage' => $coche->getKilometraje(),
-            'image' => $coche->getImagen(),
-            'description' => $coche->getDescripcion(),
-            'price' => $coche->getPrecio(),
+            'kilometraje' => $coche->getKilometraje(),
+            'imagen' => $coche->getImagen(),
+            'descripcion' => $coche->getDescripcion(),
+            'precio' => $coche->getPrecio(),
         ], $coches);
     
         return $this->json($result, Response::HTTP_OK);
     }
+    
     
 
     #[Route('/get/{id}', name: 'get_coche', methods: ['GET'])]

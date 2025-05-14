@@ -23,7 +23,7 @@ class FavoritoController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/', methods: ['POST'])]
+    #[Route('', methods: ['POST'])] // 🔄 cambiado para evitar 404 por barra
     public function agregarFavorito(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -76,4 +76,20 @@ class FavoritoController extends AbstractController
 
         return $this->json(['mensaje' => 'Favorito eliminado'], Response::HTTP_OK);
     }
-}
+
+    #[Route('/usuario/{usuarioId}', methods: ['GET'])]
+    public function obtenerFavoritosPorUsuario(int $usuarioId, EntityManagerInterface $em): JsonResponse
+    {
+        $favoritos = $em->createQuery(
+            'SELECT c.id, c.marca, c.modelo, c.year, c.kilometraje, c.imagen, c.descripcion, c.precio
+             FROM App\Entity\Favorito f
+             JOIN App\Entity\Coche c WITH f.coche = c.id
+             WHERE f.usuario = :usuarioId'
+        )
+        ->setParameter('usuarioId', $usuarioId)
+        ->getArrayResult();
+    
+        return $this->json($favoritos, Response::HTTP_OK);
+    }
+    
+}   
