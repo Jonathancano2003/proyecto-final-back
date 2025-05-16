@@ -21,10 +21,10 @@ final class CocheController extends AbstractController
         $coche = new Coche();
         $coche->setMarca($data['marca'] ?? '');
         $coche->setModelo($data['modelo'] ?? '');
-        $coche->setYear($data['año'] ?? 0);
+        $coche->setYear($data['year'] ?? 0);
         $coche->setKilometraje($data['kilometraje'] ?? 0);
         $coche->setImagen($data['imagen'] ?? null);
-        $coche->setDescripcion($data['descripcion'] ?? null);
+        $coche->setPrecio($data['precio'] ?? null);
 
         $entityManager->persist($coche);
         $entityManager->flush();

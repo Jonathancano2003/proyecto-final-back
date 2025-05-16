@@ -60,12 +60,12 @@ class Coche
         return $this;
     }
 
-    public function getyear(): ?int
+    public function getYear(): ?int
     {
         return $this->year;
     }
 
-    public function setyear(int $year): static
+    public function setYear(int $year): static
     {
         $this->year = $year;
 
