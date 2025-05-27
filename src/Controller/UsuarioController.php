@@ -75,7 +75,7 @@ class UsuarioController extends AbstractController
         if (isset($data['email'])) {
             $usuario->setEmail($data['email']);
         }
-        if (isset($data['contraseña'])) {
+        if (!empty($data['contraseña'])) {
             $usuario->setContraseña(password_hash($data['contraseña'], PASSWORD_DEFAULT));
         }
 
